@@ -33,15 +33,22 @@ sudo mv '53-lattice-ftdi.rules' '/etc/udev/rules.d/'
 ```
 
 ## Programming
-*Pulled directly from resources link above*
+Generally speaking, the process is:
+1. Write Verilog code (mydesign.v)
+2. Synthesize the Verilog code into a netlist (mydesign.blif)
+3. Place and route the netlist into a bitstream (mydesign.txt)
+4. Convert the bitstream into a binary file (mydesign.bin)
 
-
-To get a Verilog code file called mydesign.v to "run" on an FPGA, the following commands are needed. Yosys needs a Verilog (.v) file as input (example shown below) and arachne-pnr also needs the Physical Constraints file (.pcf) file to link ports in the Verilog file with ports on the hardware:
-
-
-```bash
-   yosys -q -p "synth_ice40 -blif mydesign.blif" mydesign.v \
-&& arachne-pnr -p mydesign.pcf mydesign.blif -o mydesign.txt \
-&& icepack mydesign.txt mydesign.bin \
-&& iceprog mydesign.bin
+```mermaid
+    flowchart LR
+	mydesign.v -->|yosys| mydesign.blif
+	mydesign.blif -->|arachne-pnr| mydesign.txt
+	mydesign.txt -->|icepack| mydesign.bin
 ```
+For a working example, see the `all` target in the [blinky makefile](examples/blinky/Makefile).
+
+## Burning
+To put your design on the FPGA, you need to use `iceprog` to burn the binary file to the FPGA.
+See the `burn` target in the [blinky makefile](examples/blinky/Makefile).
+
+## Simulation

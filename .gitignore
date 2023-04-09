@@ -2,3 +2,5 @@
 
 extern/lattice/*
 
+/examples/blinky2/build/
+/examples/blinky/build/
